@@ -5,10 +5,13 @@ Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
 
-from app import app
-from flask import render_template, request, redirect, url_for
-
-
+from app import app, db
+from flask import render_template, request, redirect, url_for, flash, Flask,send_file
+from app.forms import myform 
+from app.models import userProfile
+import datetime
+import os
+from werkzeug.utils import secure_filename
 ###
 # Routing for your application.
 ###
@@ -24,6 +27,48 @@ def about():
     """Render the website's about page."""
     return render_template('about.html', name="Mary Jane")
 
+
+@app.route('/profiles') 
+def profiles():
+    allUsers = db.session.query(userProfile).all() #CHECK ALL USERPROFILE and change to db. check if it works first
+    return render_template('profiles.html',allUsers=allUsers)
+
+path = app.config['UPLOAD_FOLDER'] #check if this is the right path to the img folder
+# this is where the images are stored
+
+@app.route('/profile',methods=['GET', 'POST'])
+def profile():
+    form = myform()
+    if request.method == 'POST' and form.validate_on_submit():
+        img = form.image.data
+        filename = secure_filename(img.filename)
+        img.save(os.path.join(path,filename))
+        
+        #redirect(request.url)
+        user = userProfile(
+            firstname= request.form["firstname"], 
+            lastname= request.form["lastname"], 
+            email= request.form["email"], 
+            gender= request.form["gender"] ,
+            location= request.form["location"], 
+            bio= request.form["bio"],
+            image = filename,
+            date=datetime.datetime.now().strftime("%B %d, %Y")
+            
+        )
+            # if image not showing this may be the issue.
+        
+        db.session.add(user)
+        db.session.commit()
+        flash('Thanks for registering')
+        return redirect(url_for('profiles'))
+    return render_template('profile.html', form=form)
+
+
+@app.route('/profile/<int:userid>')
+def show_user(userid):
+    user = db.session.query(userProfile).get(userid)
+    return render_template('userProfile.html', user=user) #this show be link to the show profile button in profiles.html
 
 ###
 # The functions below should be applicable to all Flask apps.

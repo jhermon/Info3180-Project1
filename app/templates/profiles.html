@@ -1,0 +1,44 @@
+{% extends 'base.html'%}
+
+{% block main %}
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for  message in messages %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <span>{{ message }}</span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <br>
+    <h2 class="proTitle">Profiles</h2>
+    
+    {% for user in allUsers %}
+        <div class="user">
+            <div class="userBody">
+                <img class="proImages" src="{{ url_for('static', filename = user.image)}}" > <!-- something wrong with the static-->
+                
+                <div class="text">
+                    <div class="grid-items" id="username">
+                    <h3>{{user.firstname}} {{user.lastname}}</h3> 
+                    </div> 
+
+                    <div class="grid-items" id="gen">
+                        <span class="far fa-user" ></span>
+                        {{user.gender}}
+                    </div>
+
+                    <div class="grid-items"id="loc1" > 
+                        <span class="fas fa-map-marker-alt" ></span>
+                        {{user.location}}
+                    </div> 
+                </div>
+                <a href="{{url_for('show_user', userid=user.id)}}"><button class="user-button">Show profile</button></a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

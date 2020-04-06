@@ -1,0 +1,44 @@
+{% extends 'base.html'%}
+
+{% block main %}
+<br><br><br>
+<div class="usersPer">
+    <img class="userimage" src="{{ url_for('static', filename = user.image)}}" >
+        
+    <div class="data">
+        <div class="name">
+            <h2>{{user.firstname}} {{user.lastname}}</h2> 
+        </div> 
+
+        <div class="email">
+            <span class="far fa-envelope"></span>
+            {{user.email}}
+        </div>
+
+        <div  class="loc2">
+            <span class="fas fa-map-marker-alt" ></span>
+            {{user.location}}
+         </div>
+
+        <div class="time">
+            <span class="far fa-calendar-alt" ></span> 
+            Joined on {{user.date}}
+        </div> 
+    </div>
+
+    <div class="userBio">
+        <h3>About Me</h3>
+        {{user.bio}}
+    </div>
+      
+
+    <div class="send">
+        <button class="sendB">Send message</button>
+    </div> 
+
+    <div class="follow">
+        <button class="followB">Follow</button>
+    </div> 
+
+</div>
+{% endblock %}
