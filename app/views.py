@@ -30,7 +30,7 @@ def about():
 
 @app.route('/profiles') 
 def profiles():
-    allUsers = db.session.query(userProfile).all() #CHECK ALL USERPROFILE and change to db. check if it works first
+    allUsers = db.session.query(userProfile).all() 
     return render_template('profiles.html',allUsers=allUsers)
 
 path = app.config['UPLOAD_FOLDER'] #check if this is the right path to the img folder
@@ -68,7 +68,7 @@ def profile():
 @app.route('/profile/<int:userid>')
 def show_user(userid):
     user = db.session.query(userProfile).get(userid)
-    return render_template('userProfile.html', user=user) #this show be link to the show profile button in profiles.html
+    return render_template('userProfile.html', user=user) 
 
 ###
 # The functions below should be applicable to all Flask apps.
